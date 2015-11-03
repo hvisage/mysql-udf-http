@@ -94,10 +94,16 @@ char *http_get(UDF_INIT *initid, UDF_ARGS *args,
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, result_cb);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)res);
     curl_easy_setopt(curl, CURLOPT_USERAGENT, "mysql-udf-http/1.0");
+    /* SSL Options */
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER , 1);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST , 1);
+    /* Provide CA Certs from http://curl.haxx.se/docs/caextract.html */
+    curl_easy_setopt(curl, CURLOPT_CAINFO, "/etc/ssl/certs/ca-bundle.crt");
+
     retref= curl_easy_perform(curl);
     if (retref) {
-      fprintf(stderr, "error\n");
-      if (res->result) 
+      fprintf(stderr, "error %d \n", (int)retref);
+      if (res->result)
         strcpy(res->result,"");
       res->size = 0;
     }
@@ -113,7 +119,7 @@ void http_get_deinit(UDF_INIT *initid)
   st_curl_results *res= (st_curl_results *)initid->ptr;
 
   if (res->result)
-        free(res->result);
+    free(res->result);
   free(res);
   return;
 }
@@ -161,17 +167,23 @@ char *http_post(UDF_INIT *initid, UDF_ARGS *args,
   if (curl)
   {
     struct curl_slist *chunk = NULL;
-    chunk = curl_slist_append(chunk, "Expect:");  
-  
+    chunk = curl_slist_append(chunk, "Expect:");
+
     curl_easy_setopt(curl, CURLOPT_URL, args->args[0]);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, result_cb);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)res);
     curl_easy_setopt(curl, CURLOPT_USERAGENT, "mysql-udf-http/1.0");
+    /* SSL Options */
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER , 1);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST , 1);
+    /* Provide CA Certs from http://curl.haxx.se/docs/caextract.html */
+    curl_easy_setopt(curl, CURLOPT_CAINFO, "/etc/ssl/certs/ca-bundle.crt");
+
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, args->args[1]);
     retref= curl_easy_perform(curl);
     if (retref) {
-      fprintf(stderr, "error\n");
+      fprintf(stderr, "error %d \n", (int)retref);
       if (res->result)
         strcpy(res->result,"");
       res->size = 0;
@@ -236,18 +248,24 @@ char *http_put(UDF_INIT *initid, UDF_ARGS *args,
   if (curl)
   {
     struct curl_slist *chunk = NULL;
-    chunk = curl_slist_append(chunk, "Expect:");  
-  
+    chunk = curl_slist_append(chunk, "Expect:");
+
     curl_easy_setopt(curl, CURLOPT_URL, args->args[0]);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, result_cb);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)res);
     curl_easy_setopt(curl, CURLOPT_USERAGENT, "mysql-udf-http/1.0");
+    /* SSL Options */
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER , 1);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST , 1);
+    /* Provide CA Certs from http://curl.haxx.se/docs/caextract.html */
+    curl_easy_setopt(curl, CURLOPT_CAINFO, "/etc/ssl/certs/ca-bundle.crt");
+
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, args->args[1]);
     retref= curl_easy_perform(curl);
     if (retref) {
-      fprintf(stderr, "error\n");
+      fprintf(stderr, "error %d \n", (int)retref);
       if (res->result)
         strcpy(res->result,"");
       res->size = 0;
@@ -315,10 +333,16 @@ char *http_delete(UDF_INIT *initid, UDF_ARGS *args,
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, result_cb);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)res);
     curl_easy_setopt(curl, CURLOPT_USERAGENT, "mysql-udf-http/1.0");
+    /* SSL Options */
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER , 1);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST , 1);
+    /* Provide CA Certs from http://curl.haxx.se/docs/caextract.html */
+    curl_easy_setopt(curl, CURLOPT_CAINFO, "/etc/ssl/certs/ca-bundle.crt");
+
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
     retref= curl_easy_perform(curl);
     if (retref) {
-      fprintf(stderr, "error\n");
+      fprintf(stderr, "error %d \n", (int)retref);
       if (res->result)
         strcpy(res->result,"");
       res->size = 0;
