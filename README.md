@@ -91,7 +91,7 @@ cd ../
 ### 2. Enter to the MySQL console
 
 ```
-/usr/local/webserver/mysql/bin/mysql -S /tmp/mysql.sock
+mysql -u<admin-user> -p
 ```
 
 ### 3. Create the UDF function in the MySQL console
