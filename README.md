@@ -6,6 +6,8 @@ MySQL User-defined function (UDF) for HTTP REST
 **Note:** It is a fork repository. Original Website is below.  
 http://code.google.com/p/mysql-udf-http
 
+Most of my @hvisage changes are for Debian 8.x (Jessie) compatibility/ease of install
+
 ## Overview
 
 | HTTP Method | CRUD Action |      Description       |
@@ -25,19 +27,45 @@ make sure these depandencies are installed.
 
 * mysql server
 * mysql_config command
+* relevant libcurl-dev
 * development tools
 
-For Debian, like this.
+For Debian 8.x, like this.
 
 ```
 apt-get install mysql-server
-apt-get install make
-apt-get install gcc
+apt-get install build-essentials
 apt-get install libmysqlclient-dev
 apt-get install pkg-config
+apt-get install libcurl4-openssl-dev
 ```
 
-### 1. Install on Linux
+### 1. Install on Debian 8.x Linux
+
+The following is needed else you need to force the shared library to be installed in the 
+mysql system directory:
+
+````
+echo "/usr/local/webserver/mysql/lib/mysql/" | sudo tee -a /etc/ld.so.conf.d/mysql.conf
+sudo /sbin/ldconfig
+```
+
+HEre we do the needed software compilation and installation:
+
+```
+git clone https://github.com/hvisage/mysql-udf-http.git
+cd mysql-udf-http/
+./configure --with-mysql=/usr/bin/mysql_config
+make && sudo make install 
+```
+
+The current makefile setup needs to be tweaked, but the best to remedy the current problems:
+
+```
+sudo cp /usr/local/lib/mysql-udf-http.so* /usr/lib/mysql/plugin/
+```
+
+### 1(b). (Old information) Install on Linux
 
 This sample is written for "/usr/local/webserver/mysql/" is your MySQL install path.
 
